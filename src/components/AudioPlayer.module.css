@@ -1,0 +1,155 @@
+.audioPlayer {
+    --primary: #6d6d92;
+    --secondary: #2e2d29;
+    --roundedCorner: 10px;
+
+    align-items: center;
+    display: flex;
+    width: 700px;
+}
+
+.forwardBackWard {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    font-family: monospace;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.forwardBackWard:hover {
+    color: var(--primary);
+}
+
+.playPause {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--primary);
+    border: none;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    font-size: 32px;
+    color: var(--secondary)
+}
+
+.play {
+    position: relative;
+    left: 5px;
+}
+
+.currentTime,
+.duration {
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.currentTime {
+    margin-left: 25px;
+}
+
+.progressBar {
+    --bar-bg: #b4b7c3;
+    --seek-before-width: 0;
+    --seek-before-color: #828da3;
+    --knobby: #6d6d92;
+    --selectedKnobby: #0beede;
+
+    appearance: none;
+    background: var(--bar-bg);
+    border-radius: var(--roundedCorner);
+    position: relative;
+    width: 100%;
+    height: 11px;
+    outline: none;
+    cursor: pointer;
+}
+
+.progressBar::-webkit-slider-runnable-track {
+    background: var(--bar-bg);
+    border-radius: var(--roundedCorner);
+    position: relative;
+    width: 100%;
+    height: 11px;
+    outline: none;
+}
+
+.progressBar::-moz-range-track {
+    background: var(--bar-bg);
+    border-radius: var(--roundedCorner);
+    position: relative;
+    width: 100%;
+    height: 11px;
+    outline: none;
+}
+
+.progressBar::-moz-focus-outer {
+    border: 0
+}
+
+/*progress-bar - Chrome and Safari*/
+.progressBar::before {
+    content: '';
+    height: 11px;
+    width: var(--seek-before-width);
+    background-color: var(--seek-before-color);
+    border-top-left-radius: var(--roundedCorner);
+    border-bottom-left-radius: var(--roundedCorner);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+
+/*progress-bar - firefox*/
+.progressBar::-moz-range-progress {
+    background-color: var(--seek-before-color);
+    border-top-left-radius: var(--roundedCorner);
+    border-bottom-left-radius: var(--roundedCorner);
+    height: 11px;
+}
+
+/*knobby - chrome and safari*/
+.progressBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--knobby);
+    cursor: pointer;
+    position: relative;
+    margin: -2px 0 0 0;
+    z-index: 3;
+    box-sizing: border-box;
+}
+
+/*knobby while dragging - chrome and safari*/
+.progressBar:active::-webkit-slider-thumb {
+    transform: scale(1.2);
+    background: var(--selectedKnobby);
+}
+
+/*knobby - firefox*/
+.progressBar::-moz-range-thumb {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    border: transparent;
+    background-color: var(--knobby);
+    cursor: pointer;
+    position: relative;
+    z-index: 3;
+    box-sizing: border-box;
+}
+
+/*knobby while dragging - firefox*/
+.progressBar:active::-moz-range-thumb {
+    transform: scale(1.2);
+    background: var(--selectedKnobby);
+}
+
