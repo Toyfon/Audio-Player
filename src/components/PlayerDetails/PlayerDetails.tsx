@@ -1,17 +1,18 @@
 import { FC } from 'react';
 
-import { TrackType } from 'types/track-type';
+import styles from 'components/PlayerDetails/playerDetails.module.css';
+import { SongType } from 'types/song-type';
 
 type PlayerDetailsType = {
-  song: TrackType;
+  song: SongType;
 };
 
 export const PlayerDetails: FC<PlayerDetailsType> = ({ song }) => (
-  <div className="c-player--details">
-    <div className="details-image">
+  <div className={styles.player_details}>
+    <div className={styles.details_img}>
       <img src={song.img_src} alt="track cover" />
     </div>
-    <h3 className="details-title">{song.title}</h3>
-    <h4 className="details-artist">{song.artist}</h4>
+    <h3 className={styles.details_title}>{song.title}</h3>
+    <h4 className={styles.details_artist}>{song.artist}</h4>
   </div>
 );

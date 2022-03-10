@@ -41,9 +41,7 @@ export const AudioPlayer: FC = () => {
 
   const changeRange = (): void => {
     // @ts-ignore
-    console.log(typeof progressBarRef.current.value);
     audioPlayerRef.current.currentTime = Number(progressBarRef.current.value);
-    console.log(typeof audioPlayerRef.current.currentTime);
     changePlayerCurrentTime();
   };
   const whilePlaying = (): void => {

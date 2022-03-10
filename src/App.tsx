@@ -1,24 +1,13 @@
-import './App.css';
 import { FC, useState, useEffect } from 'react';
 
+import { useSelector } from 'react-redux';
+
+import { selectSongs } from 'bll/selectors/player-selectors';
 import { Player } from 'components/Player/Player';
-import { TrackType } from 'types/track-type';
+import './App.css';
 
 export const App: FC = () => {
-  const [songs] = useState<TrackType[]>([
-    {
-      title: '.223',
-      artist: 'Bones',
-      img_src: './images/bones-223.jpg',
-      src: './music/bones-223.mp3',
-    },
-    {
-      title: 'Малый повзрослел',
-      artist: 'Макс Корж',
-      img_src: './images/Maks.jpg',
-      src: './music/Maks.mp3',
-    },
-  ]);
+  const songs = useSelector(selectSongs);
 
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
   const [nextSongIndex, setNextSongIndex] = useState<number>(currentSongIndex + 1);
@@ -38,7 +27,6 @@ export const App: FC = () => {
         currentSongIndex={currentSongIndex}
         setCurrentSongIndex={setCurrentSongIndex}
         nextSongIndex={nextSongIndex}
-        songs={songs}
       />
     </div>
   );

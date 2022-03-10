@@ -1,23 +1,24 @@
 import { FC, useState, useEffect, useRef } from 'react';
 
+import { useSelector } from 'react-redux';
+
+import { selectSongs } from 'bll/selectors/player-selectors';
 import styles from 'components/Player/player.module.css';
 import { PlayerControls } from 'components/PlayerControls/PlayerControls';
 import { PlayerDetails } from 'components/PlayerDetails/PlayerDetails';
-import { TrackType } from 'types/track-type';
 
 type PlayerType = {
   currentSongIndex: number;
   setCurrentSongIndex: (currentSongIndex: () => number) => void;
   nextSongIndex: number;
-  songs: Array<TrackType>;
 };
 
 export const Player: FC<PlayerType> = ({
   currentSongIndex,
   setCurrentSongIndex,
   nextSongIndex,
-  songs,
 }) => {
+  const songs = useSelector(selectSongs);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioEl = useRef<HTMLAudioElement>(null!);
 
@@ -57,7 +58,7 @@ export const Player: FC<PlayerType> = ({
 
   return (
     <div className={styles.player}>
-      <audio ref={audioEl} src={songs[currentSongIndex].src}>
+      <audio preload="metadata" ref={audioEl} src={songs[currentSongIndex].src}>
         <track kind="captions" />
       </audio>
       <h4>Playing now</h4>
@@ -66,9 +67,10 @@ export const Player: FC<PlayerType> = ({
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
         skipSong={skipSong}
+        audioEl={audioEl}
       />
       <p>
-        <strong>Next up:</strong> {songs[nextSongIndex].title} by
+        <strong>Next up:</strong> {songs[nextSongIndex].title} by{' '}
         {songs[nextSongIndex].artist}
       </p>
     </div>
