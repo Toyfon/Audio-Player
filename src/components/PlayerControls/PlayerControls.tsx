@@ -3,7 +3,8 @@ import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import { IoPlayForward, IoPlayBack } from 'react-icons/io5';
 
-import styles from 'components/PlayerControls/player-controls.module.css';
+// @ts-ignore
+import styles from 'components/PlayerControls/PlayerControls.module.css';
 
 type PlayerControlsType = {
   isPlaying: boolean;
