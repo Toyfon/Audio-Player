@@ -1,34 +1,47 @@
-import { FC, MutableRefObject, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FC,
+  memo,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { FaPlay, FaPause, FaVolumeDown, FaVolumeUp } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeDown, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import { IoPlayForward, IoPlayBack } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { setCurrentTime, setDuration } from 'bll/player-slice';
+import { selectCurrentTime, selectDuration } from 'bll/selectors/player-selectors';
 import styles from 'components/PlayerControls/PlayerControls.module.css';
 import { calculateTime } from 'utils/calculateTimeUtil';
 
 type PlayerControlsType = {
-  isPlaying: boolean;
-  setIsPlaying: (isPlaying: boolean) => void;
   skipSong: (forwards: boolean) => void;
   audioEl: MutableRefObject<HTMLAudioElement>;
 };
 
-export const PlayerControls: FC<PlayerControlsType> = ({
-  skipSong,
-  isPlaying,
-  setIsPlaying,
-  audioEl,
-}) => {
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
+export const PlayerControls: FC<PlayerControlsType> = memo(({ skipSong, audioEl }) => {
+  const currentTime = useSelector(selectCurrentTime);
+  const duration = useSelector(selectDuration);
+
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [volumeValue, setVolumeValue] = useState<number>(0.5);
+
   const progressBarRef = useRef<HTMLInputElement>(null!);
   const animationRef = useRef<number | undefined>(undefined);
 
+  const audio = audioEl.current;
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const seconds = Math.floor(audioEl.current.duration);
-    setDuration(seconds);
+    const seconds = Math.floor(audio.duration);
+    dispatch(setDuration(seconds));
     progressBarRef.current.max = String(seconds);
-  }, [audioEl?.current?.onloadedmetadata, audioEl?.current?.readyState]);
+  }, [audio?.onloadedmetadata, audio?.readyState]);
 
   useEffect(() => {
     if (currentTime === duration) {
@@ -43,15 +56,15 @@ export const PlayerControls: FC<PlayerControlsType> = ({
       // @ts-ignore
       `${(progressBarRef.current.value / duration) * 100}%`,
     );
-    setCurrentTime(Number(progressBarRef.current.value));
+    dispatch(setCurrentTime(Number(progressBarRef.current.value)));
   };
   const changeRange = (): void => {
-    audioEl.current.currentTime = Number(progressBarRef.current.value);
+    audio.currentTime = Number(progressBarRef.current.value);
     changePlayerCurrentTime();
   };
 
   const whilePlaying = (): void => {
-    progressBarRef.current.value = String(audioEl.current.currentTime);
+    progressBarRef.current.value = String(audio.currentTime);
     changePlayerCurrentTime();
     animationRef.current = requestAnimationFrame(whilePlaying);
   };
@@ -60,13 +73,28 @@ export const PlayerControls: FC<PlayerControlsType> = ({
     const prevValue = isPlaying;
     setIsPlaying(!prevValue);
     if (!prevValue) {
-      audioEl.current.play();
+      audio.play();
       animationRef.current = requestAnimationFrame(whilePlaying);
     } else {
-      audioEl.current.pause();
+      audio.pause();
       if (typeof animationRef.current === 'number') {
         cancelAnimationFrame(animationRef.current);
       }
+    }
+  };
+
+  const changeVolume = (e: ChangeEvent<HTMLInputElement>): void => {
+    setVolumeValue(+e.currentTarget.value);
+    audio.volume = Number(e.currentTarget.value);
+    console.log(audio.volume);
+  };
+
+  const muteVolume = (): void => {
+    setIsMuted(!isMuted);
+    if (!isMuted) {
+      audio.volume = 0;
+    } else {
+      audio.volume = 0.5;
     }
   };
   return (
@@ -101,10 +129,20 @@ export const PlayerControls: FC<PlayerControlsType> = ({
         </button>
       </div>
       <div className={styles.volumeBlock}>
-        <FaVolumeDown />
-        <input type="range" defaultValue=".3" className={styles.progressBar} />
-        <FaVolumeUp />
+        <button className={styles.volumeButton} type="button" onClick={muteVolume}>
+          {isMuted ? <FaVolumeMute /> : <FaVolumeDown />}
+        </button>
+        <input
+          type="range"
+          className={styles.progressBar}
+          min="0"
+          max="1"
+          step="0.001"
+          value={volumeValue}
+          onChange={changeVolume}
+        />
+        <FaVolumeUp className={styles.volumeButton} />
       </div>
     </div>
   );
-};
+});

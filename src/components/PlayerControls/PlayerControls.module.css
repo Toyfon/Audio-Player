@@ -159,3 +159,11 @@
     display: flex;
     justify-content: space-between;
 }
+
+.volumeButton {
+    height: 10px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background-color: inherit;
+}

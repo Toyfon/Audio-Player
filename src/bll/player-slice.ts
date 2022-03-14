@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { SongType } from 'types/song-type';
 
@@ -33,12 +33,6 @@ const songs: SongType[] = [
     img_src: './images/iceberg.jpg',
     src: './music/iceberg.mp3',
   },
-  {
-    title: 'Ягода малина',
-    artist: 'Валентина Легкоступова',
-    img_src: './images/valentina.jpg',
-    src: './music/valentina.mp3',
-  },
 ];
 
 const playerSlice = createSlice({
@@ -47,9 +41,18 @@ const playerSlice = createSlice({
     songs,
     currentSongIndex: 0,
     nextSongIndex: 0,
+    currentTime: 0,
+    duration: 0,
   },
-  reducers: {},
+  reducers: {
+    setCurrentTime: (state, action: PayloadAction<number>) => {
+      state.currentTime = action.payload;
+    },
+    setDuration: (state, action: PayloadAction<number>) => {
+      state.duration = action.payload;
+    },
+  },
 });
 
-// export const {} = playerSlice.actions;
+export const { setCurrentTime, setDuration } = playerSlice.actions;
 export default playerSlice.reducer;
