@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC, useState, useRef } from 'react';
 
 import { useSelector } from 'react-redux';
 
@@ -22,21 +22,13 @@ export const Player: FC<PlayerType> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioEl = useRef<HTMLAudioElement>(null!);
 
-  useEffect(() => {
-    if (isPlaying) {
-      audioEl.current.play();
-    } else {
-      audioEl.current.pause();
-    }
-  });
+  console.log(audioEl);
 
   const skipSong = (forwards: boolean = true): void => {
     if (forwards) {
       setCurrentSongIndex(() => {
         let temp = currentSongIndex;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-plusplus
-        temp++;
-
+        temp += 1;
         if (temp > songs.length - 1) {
           temp = 0;
         }
@@ -45,9 +37,7 @@ export const Player: FC<PlayerType> = ({
     } else {
       setCurrentSongIndex(() => {
         let temp = currentSongIndex;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-plusplus
-        temp--;
-
+        temp -= 1;
         if (temp < 0) {
           temp = songs.length - 1;
         }

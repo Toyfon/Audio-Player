@@ -46,8 +46,10 @@ const playerSlice = createSlice({
   initialState: {
     songs,
     currentSongIndex: 0,
+    nextSongIndex: 0,
   },
   reducers: {},
 });
 
+// export const {} = playerSlice.actions;
 export default playerSlice.reducer;

@@ -75,11 +75,12 @@ export const AudioPlayer: FC = () => {
     changeRange();
   };
 
+  const seconds = calculateTime(duration);
   return (
     <div className={styles.audioPlayer}>
       <audio
         ref={audioPlayerRef}
-        src="https://dl2.mp3party.net/online/4700893.mp3"
+        src="https://dl2.mp3party.net/online/8765368.mp3"
         preload="metadata"
       >
         <track kind="captions" />
@@ -110,9 +111,7 @@ export const AudioPlayer: FC = () => {
       </div>
 
       {/* duration */}
-      <div className={styles.duration}>
-        {duration && !Number.isNaN(duration) && calculateTime(duration)}
-      </div>
+      {Number.isNaN(duration) ? '' : <div className={styles.duration}>{seconds}</div>}
     </div>
   );
 };
