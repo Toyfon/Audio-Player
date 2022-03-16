@@ -4,6 +4,12 @@ import { SongType } from 'types/song-type';
 
 const songs: SongType[] = [
   {
+    title: 'Out of time',
+    artist: 'Monrroe feat Zara Kershaw',
+    img_src: './images/monrroe.jpg',
+    src: './music/Monrroe.mp3',
+  },
+  {
     title: '.223',
     artist: 'Bones',
     img_src: './images/bones-223.jpg',
@@ -20,12 +26,6 @@ const songs: SongType[] = [
     artist: 'Kendrick Lamar ',
     img_src: './images/Kendrick.jpg',
     src: './music/kendrick-lamar_-_humble.mp3',
-  },
-  {
-    title: 'Out of time',
-    artist: 'Monrroe feat Zara Kershaw',
-    img_src: './images/monrroe.jpg',
-    src: './music/Monrroe.mp3',
   },
   {
     title: 'No time',

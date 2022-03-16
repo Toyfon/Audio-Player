@@ -18,8 +18,6 @@ export const Player: FC<PlayerType> = memo(
     const songs = useSelector(selectSongs);
     const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
 
-    console.log(songs);
-
     const skipSong = (forwards: boolean = true): void => {
       if (forwards) {
         setCurrentSongIndex(() => {
@@ -42,24 +40,18 @@ export const Player: FC<PlayerType> = memo(
       }
     };
 
-    // const playNextSong = (): void => {
-    //   // eslint-disable-next-line no-alert
-    //   alert('следующий трек');
-    // };
-
     return (
       <div className={styles.player}>
-        <audio
-          preload="metadata"
-          ref={audioEl}
-          src={songs[currentSongIndex].src}
-          // onEnded={playNextSong}
-        >
+        <audio ref={audioEl} src={songs[currentSongIndex].src}>
           <track kind="captions" />
         </audio>
         <h4>Playing now</h4>
         <PlayerDetails song={songs[currentSongIndex]} />
-        <PlayerControls skipSong={skipSong} audioEl={audioEl} />
+        <PlayerControls
+          skipSong={skipSong}
+          audioEl={audioEl}
+          currentSongIndex={currentSongIndex}
+        />
         <p>
           <strong>Next up:</strong> {songs[nextSongIndex].title} by{' '}
           {songs[nextSongIndex].artist}
