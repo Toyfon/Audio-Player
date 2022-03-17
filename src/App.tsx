@@ -11,8 +11,9 @@ export const App: FC = () => {
 
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
   const [nextSongIndex, setNextSongIndex] = useState<number>(currentSongIndex + 1);
-  console.log(songs[currentSongIndex].src);
-  console.log(currentSongIndex);
+  console.log('APP RENDER');
+  // console.log(songs[currentSongIndex].src);
+  // console.log(currentSongIndex);
   useEffect(() => {
     setNextSongIndex(() => {
       if (currentSongIndex + 1 > songs.length - 1) {

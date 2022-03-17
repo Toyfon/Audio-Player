@@ -29,9 +29,15 @@ const songs: SongType[] = [
   },
   {
     title: 'No time',
-    artist: ' Iceberg Black, Ghostemane',
+    artist: 'Iceberg Black, Ghostemane',
     img_src: './images/iceberg.jpg',
     src: './music/iceberg.mp3',
+  },
+  {
+    title: 'Worry About Me',
+    artist: 'Ellie Goulding & blackbear',
+    img_src: './images/ellie.jpg',
+    src: './music/Ellie.mp3',
   },
 ];
 
@@ -43,6 +49,7 @@ const playerSlice = createSlice({
     nextSongIndex: 0,
     currentTime: 0,
     duration: 0,
+    isRepeat: false,
   },
   reducers: {
     setCurrentTime: (state, action: PayloadAction<number>) => {
@@ -51,8 +58,15 @@ const playerSlice = createSlice({
     setDuration: (state, action: PayloadAction<number>) => {
       state.duration = action.payload;
     },
+    setRepeatValue: (state, action: PayloadAction<boolean>) => {
+      state.isRepeat = action.payload;
+    },
+    changeTracksOrder: state => {
+      state.songs = state.songs.sort(() => Math.random() - 0.5);
+    },
   },
 });
 
-export const { setCurrentTime, setDuration } = playerSlice.actions;
+export const { setCurrentTime, setDuration, setRepeatValue, changeTracksOrder } =
+  playerSlice.actions;
 export default playerSlice.reducer;

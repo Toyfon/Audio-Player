@@ -1,22 +1,29 @@
-import { FC, memo, useRef } from 'react';
+import { FC, memo, useCallback, useRef } from 'react';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { selectSongs } from 'bll/selectors/player-selectors';
+import { changeTracksOrder, setRepeatValue } from 'bll/player-slice';
+import { selectIsRepeat, selectSongs } from 'bll/selectors/player-selectors';
 import styles from 'components/Player/player.module.css';
 import { PlayerControls } from 'components/PlayerControls/PlayerControls';
 import { PlayerDetails } from 'components/PlayerDetails/PlayerDetails';
 
-type PlayerType = {
+type PlayerPropsType = {
   currentSongIndex: number;
   setCurrentSongIndex: (currentSongIndex: () => number) => void;
   nextSongIndex: number;
 };
 
-export const Player: FC<PlayerType> = memo(
+export const Player: FC<PlayerPropsType> = memo(
   ({ currentSongIndex, setCurrentSongIndex, nextSongIndex }) => {
     const songs = useSelector(selectSongs);
     const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
+    const isRepeat = useSelector(selectIsRepeat);
+    // console.log(isRepeat);
+    // console.log(songs);
+    console.log('PLAYER RENDER');
+
+    const dispatch = useDispatch();
 
     const skipSong = (forwards: boolean = true): void => {
       if (forwards) {
@@ -39,10 +46,18 @@ export const Player: FC<PlayerType> = memo(
         });
       }
     };
+    const handleChangeRepeatValue = useCallback((): void => {
+      dispatch(setRepeatValue(!isRepeat));
+    }, [dispatch]);
+
+    const handleChangeTrackReordering = useCallback((): void => {
+      // console.log('change');
+      dispatch(changeTracksOrder());
+    }, [dispatch]);
 
     return (
       <div className={styles.player}>
-        <audio ref={audioEl} src={songs[currentSongIndex].src}>
+        <audio loop={isRepeat} ref={audioEl} src={songs[currentSongIndex].src}>
           <track kind="captions" />
         </audio>
         <h4>Playing now</h4>
@@ -51,6 +66,8 @@ export const Player: FC<PlayerType> = memo(
           skipSong={skipSong}
           audioEl={audioEl}
           currentSongIndex={currentSongIndex}
+          handleChangeRepeatValue={handleChangeRepeatValue}
+          handleChangeTrackReordering={handleChangeTrackReordering}
         />
         <p>
           <strong>Next up:</strong> {songs[nextSongIndex].title} by{' '}

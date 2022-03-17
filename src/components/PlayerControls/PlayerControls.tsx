@@ -8,12 +8,24 @@ import {
   useState,
 } from 'react';
 
-import { FaPlay, FaPause, FaVolumeDown, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
+import {
+  FaPlay,
+  FaPause,
+  FaVolumeDown,
+  FaVolumeUp,
+  FaVolumeMute,
+  FaRandom,
+} from 'react-icons/fa';
 import { IoPlayForward, IoPlayBack } from 'react-icons/io5';
+import { MdRepeat, MdRepeatOne } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setCurrentTime, setDuration } from 'bll/player-slice';
-import { selectCurrentTime, selectDuration } from 'bll/selectors/player-selectors';
+import {
+  selectCurrentTime,
+  selectDuration,
+  selectIsRepeat,
+} from 'bll/selectors/player-selectors';
 import styles from 'components/PlayerControls/PlayerControls.module.css';
 import { calculateTime } from 'utils/calculateTimeUtil';
 
@@ -21,12 +33,21 @@ type PlayerControlsType = {
   skipSong: (forwards: boolean) => void;
   audioEl: MutableRefObject<HTMLAudioElement>;
   currentSongIndex: number;
+  handleChangeRepeatValue: () => void;
+  handleChangeTrackReordering: () => void;
 };
 
 export const PlayerControls: FC<PlayerControlsType> = memo(
-  ({ skipSong, audioEl, currentSongIndex }) => {
+  ({
+    skipSong,
+    audioEl,
+    currentSongIndex,
+    handleChangeRepeatValue,
+    handleChangeTrackReordering,
+  }) => {
     const currentTime = useSelector(selectCurrentTime);
     const duration = useSelector(selectDuration);
+    const isRepeat = useSelector(selectIsRepeat);
 
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -36,7 +57,7 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
     const animationRef = useRef<number | undefined>(undefined);
 
     const audio = audioEl.current;
-
+    console.log('SETTINGS RENDER');
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -46,20 +67,6 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
     }, [audio?.onloadedmetadata, audio?.readyState]);
 
     useEffect(() => {
-      // const playPromise = audio.play();
-
-      // if (playPromise !== undefined) {
-      //   playPromise.then(_ => {
-      //     // Automatic playback started!
-      //     // Show playing UI.
-      //     // We can now safely pause video...
-      //     video.pause();
-      //   })
-      //     .catch(error => {
-      //       // Auto-play was prevented
-      //       // Show paused UI.
-      //     });
-      // }
       if (audio === null) {
         return;
       }
@@ -68,15 +75,13 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
         skipSong(true);
         audio.play();
       };
-      // @ts-ignore
       audio.addEventListener('ended', playNextSong);
     }, [audio, currentSongIndex]);
 
     const changePlayerCurrentTime = (): void => {
       progressBarRef.current.style.setProperty(
         '--seek-before-width',
-        // @ts-ignore
-        `${(progressBarRef.current.value / duration) * 100}%`,
+        `${(+progressBarRef.current.value / duration) * 100}%`,
       );
       dispatch(setCurrentTime(Number(progressBarRef.current.value)));
     };
@@ -113,6 +118,7 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
     const muteVolume = (): void => {
       setIsMuted(!isMuted);
       if (!isMuted) {
+        setVolumeValue(0);
         audio.volume = 0;
       } else {
         audio.volume = volumeValue;
@@ -120,13 +126,30 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
     };
     return (
       <div className={styles.player_controls}>
-        <input
-          type="range"
-          defaultValue="0"
-          className={styles.progressBar}
-          ref={progressBarRef}
-          onChange={changeRange}
-        />
+        <div className={styles.playback_block}>
+          <FaRandom
+            onClick={handleChangeTrackReordering}
+            style={{ width: '13px', height: '13px' }}
+          />
+          <input
+            type="range"
+            defaultValue="0"
+            className={styles.progressBar}
+            ref={progressBarRef}
+            onChange={changeRange}
+          />
+          <button
+            className={styles.repeat_button}
+            type="button"
+            onClick={handleChangeRepeatValue}
+          >
+            {isRepeat ? (
+              <MdRepeatOne style={{ width: '13px', height: '13px' }} />
+            ) : (
+              <MdRepeat style={{ width: '13px', height: '13px' }} />
+            )}
+          </button>
+        </div>
         <div className={styles.duration_block}>
           <div className={styles.currentTime}>{calculateTime(currentTime)}</div>
           <div className={styles.duration}>
