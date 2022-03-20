@@ -1,22 +1,15 @@
 import {
-  ChangeEvent,
   FC,
   memo,
   MutableRefObject,
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
 
-import {
-  FaPlay,
-  FaPause,
-  FaVolumeDown,
-  FaVolumeUp,
-  FaVolumeMute,
-  FaRandom,
-} from 'react-icons/fa';
-import { IoPlayForward, IoPlayBack } from 'react-icons/io5';
+import { FaPause, FaPlay, FaRandom } from 'react-icons/fa';
+import { IoPlayBack, IoPlayForward } from 'react-icons/io5';
 import { MdRepeat, MdRepeatOne } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -27,56 +20,64 @@ import {
   selectIsRepeat,
 } from 'bll/selectors/player-selectors';
 import styles from 'components/PlayerControls/PlayerControls.module.css';
+import { VolumeSettings } from 'components/PlayerControls/VolumeBlock/VolumeSettings';
 import { calculateTime } from 'utils/calculateTimeUtil';
 
 type PlayerControlsType = {
   skipSong: (forwards: boolean) => void;
   audioEl: MutableRefObject<HTMLAudioElement>;
   currentSongIndex: number;
-  handleChangeRepeatValue: () => void;
+  handleChangeRepeatValue: (value: boolean) => void;
   handleChangeTrackReordering: () => void;
 };
 
 export const PlayerControls: FC<PlayerControlsType> = memo(
-  ({
-    skipSong,
-    audioEl,
-    currentSongIndex,
-    handleChangeRepeatValue,
-    handleChangeTrackReordering,
-  }) => {
+  ({ skipSong, audioEl, handleChangeRepeatValue, handleChangeTrackReordering }) => {
     const currentTime = useSelector(selectCurrentTime);
     const duration = useSelector(selectDuration);
     const isRepeat = useSelector(selectIsRepeat);
 
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
-    const [isMuted, setIsMuted] = useState<boolean>(false);
-    const [volumeValue, setVolumeValue] = useState<number>(0.7);
-
+    console.log('CONTROLS RENDER');
     const progressBarRef = useRef<HTMLInputElement>(null!);
     const animationRef = useRef<number | undefined>(undefined);
 
     const audio = audioEl.current;
-    console.log('SETTINGS RENDER');
+
     const dispatch = useDispatch();
 
     useEffect(() => {
       const seconds = Math.floor(audio.duration);
       dispatch(setDuration(seconds));
       progressBarRef.current.max = String(seconds);
-    }, [audio?.onloadedmetadata, audio?.readyState]);
+    }, [audio.duration, audio.onloadedmetadata, audio.readyState, dispatch]);
 
     useEffect(() => {
       if (audio === null) {
         return;
       }
       const playNextSong = (): void => {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              skipSong(true);
+              audio.autoplay = true;
+            })
+            .catch(error => {
+              console.log(error);
+              // Auto-play was prevented
+              // Show paused UI.
+            });
+        }
         console.log('следующий трек');
-        skipSong(true);
-        audio.play();
       };
       audio.addEventListener('ended', playNextSong);
-    }, [audio, currentSongIndex]);
+      // eslint-disable-next-line consistent-return
+      return () => {
+        audio.removeEventListener('ended', playNextSong);
+      };
+    }, [audio, skipSong]);
 
     const changePlayerCurrentTime = (): void => {
       progressBarRef.current.style.setProperty(
@@ -96,11 +97,19 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
       animationRef.current = requestAnimationFrame(whilePlaying);
     };
 
+    const handleChangeVolumeRange = useCallback(
+      (value: number): void => {
+        audio.volume = value;
+      },
+      [audio],
+    );
+
     const handlePlayClick = (): void => {
       const prevValue = isPlaying;
       setIsPlaying(!prevValue);
       if (!prevValue) {
         audio.play();
+        audio.volume = 0.3;
         animationRef.current = requestAnimationFrame(whilePlaying);
       } else {
         audio.pause();
@@ -109,27 +118,12 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
         }
       }
     };
-
-    const changeVolume = (e: ChangeEvent<HTMLInputElement>): void => {
-      setVolumeValue(+e.currentTarget.value);
-      audio.volume = Number(e.currentTarget.value);
-    };
-
-    const muteVolume = (): void => {
-      setIsMuted(!isMuted);
-      if (!isMuted) {
-        setVolumeValue(0);
-        audio.volume = 0;
-      } else {
-        audio.volume = volumeValue;
-      }
-    };
     return (
       <div className={styles.player_controls}>
         <div className={styles.playback_block}>
           <FaRandom
             onClick={handleChangeTrackReordering}
-            style={{ width: '13px', height: '13px' }}
+            style={{ width: '13px', height: '13px', cursor: 'pointer' }}
           />
           <input
             type="range"
@@ -138,22 +132,23 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
             ref={progressBarRef}
             onChange={changeRange}
           />
-          <button
-            className={styles.repeat_button}
-            type="button"
-            onClick={handleChangeRepeatValue}
-          >
+          <button className={styles.repeat_button} type="button">
             {isRepeat ? (
-              <MdRepeatOne style={{ width: '13px', height: '13px' }} />
+              <MdRepeatOne
+                style={{ width: '13px', height: '13px' }}
+                onClick={() => handleChangeRepeatValue(false)}
+              />
             ) : (
-              <MdRepeat style={{ width: '13px', height: '13px' }} />
+              <MdRepeat
+                style={{ width: '13px', height: '13px' }}
+                onClick={() => handleChangeRepeatValue(true)}
+              />
             )}
           </button>
         </div>
         <div className={styles.duration_block}>
           <div className={styles.currentTime}>{calculateTime(currentTime)}</div>
           <div className={styles.duration}>
-            {/* {duration && !Number.isNaN(duration) && calculateTime(duration)} */}
             {Number.isNaN(duration) ? (
               '--:--'
             ) : (
@@ -180,21 +175,7 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
             <IoPlayForward />
           </button>
         </div>
-        <div className={styles.volumeBlock}>
-          <button className={styles.volumeButton} type="button" onClick={muteVolume}>
-            {isMuted ? <FaVolumeMute /> : <FaVolumeDown />}
-          </button>
-          <input
-            type="range"
-            className={styles.progressBar}
-            min="0"
-            max="1"
-            step="0.001"
-            value={volumeValue}
-            onChange={changeVolume}
-          />
-          <FaVolumeUp className={styles.volumeButton} />
-        </div>
+        <VolumeSettings handleChangeVolumeRange={handleChangeVolumeRange} />
       </div>
     );
   },

@@ -1,35 +1,14 @@
-import { FC, useState, useEffect } from 'react';
+import { FC } from 'react';
 
-import { useSelector } from 'react-redux';
-
-import { selectSongs } from 'bll/selectors/player-selectors';
-import { Player } from 'components/Player/Player';
 import './App.css';
 
+import { Player } from 'components/Player/Player';
+
 export const App: FC = () => {
-  const songs = useSelector(selectSongs);
-
-  const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
-  const [nextSongIndex, setNextSongIndex] = useState<number>(currentSongIndex + 1);
   console.log('APP RENDER');
-  // console.log(songs[currentSongIndex].src);
-  // console.log(currentSongIndex);
-  useEffect(() => {
-    setNextSongIndex(() => {
-      if (currentSongIndex + 1 > songs.length - 1) {
-        return 0;
-      }
-      return currentSongIndex + 1;
-    });
-  }, [currentSongIndex]);
-
   return (
     <div className="App">
-      <Player
-        currentSongIndex={currentSongIndex}
-        setCurrentSongIndex={setCurrentSongIndex}
-        nextSongIndex={nextSongIndex}
-      />
+      <Player />
     </div>
   );
 };
