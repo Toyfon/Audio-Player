@@ -83,8 +83,8 @@ export const Player: FC = () => {
       <audio loop={isRepeat} ref={audioEl} src={songs[currentSongIndex].src}>
         <track kind="captions" />
       </audio>
-      <h4>Playing now</h4>
       {isShowPlaylist && <PlayList callback={callback} />}
+      <h4>Playing now</h4>
       <PlayerDetails song={songs[currentSongIndex]} />
       <PlayerControls
         isPlaying={isPlaying}
@@ -96,7 +96,7 @@ export const Player: FC = () => {
         handleChangeTrackReordering={handleChangeTrackReordering}
       />
       <AiOutlineMenu
-        style={{ cursor: 'pointer', color: '#AAA' }}
+        className={styles.open_playlist}
         onClick={handleShowPlaylistOnClick}
       />
       <p>

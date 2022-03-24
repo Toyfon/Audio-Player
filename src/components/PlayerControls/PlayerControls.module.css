@@ -25,6 +25,7 @@
 
 .random_button:hover {
     color: #70c9c8;
+    transform: scale(1.2);
 }
 
 .buttons_group {
@@ -45,6 +46,7 @@
 
 .repeat_button:hover {
     color: #70c9c8;
+    transform: scale(1.2);
 }
 
 .player_controls > input {
@@ -156,17 +158,14 @@
     -webkit-appearance: none;
     height: 1px;
     width: 2px;
-    /*border-radius: 50%;*/
     border: none;
     background-color: var(--knobby);
     cursor: pointer;
     position: relative;
-    /*margin: 2px 0 0 0;*/
     z-index: 3;
     box-sizing: border-box;
 }
-
-/*knobby while dragging - chrome and safari*/
+    /*knobby while dragging - chrome and safari*/
 .progressBar:active::-webkit-slider-thumb {
     transform: scale(1.2);
     background: var(--selectedKnobby);

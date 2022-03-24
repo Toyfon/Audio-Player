@@ -16,6 +16,10 @@
     background-color: inherit;
     margin: 5px;
 }
+.volumeButton:hover {
+    color: #70c9c8;
+    transform: scale(1.2);
+}
 
 
 
