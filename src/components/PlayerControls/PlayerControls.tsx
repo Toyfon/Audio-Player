@@ -1,12 +1,4 @@
-import {
-  FC,
-  memo,
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FC, memo, MutableRefObject, useCallback, useEffect, useRef } from 'react';
 
 import { FaPause, FaPlay, FaRandom } from 'react-icons/fa';
 import { IoPlayBack, IoPlayForward } from 'react-icons/io5';
@@ -29,16 +21,23 @@ type PlayerControlsType = {
   currentSongIndex: number;
   handleChangeRepeatValue: (value: boolean) => void;
   handleChangeTrackReordering: () => void;
+  isPlaying: boolean;
+  setIsPlaying: (isPlaying: boolean) => void;
 };
 
 export const PlayerControls: FC<PlayerControlsType> = memo(
-  ({ skipSong, audioEl, handleChangeRepeatValue, handleChangeTrackReordering }) => {
+  ({
+    skipSong,
+    audioEl,
+    handleChangeRepeatValue,
+    handleChangeTrackReordering,
+    isPlaying,
+    setIsPlaying,
+  }) => {
     const currentTime = useSelector(selectCurrentTime);
     const duration = useSelector(selectDuration);
     const isRepeat = useSelector(selectIsRepeat);
 
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-    console.log('CONTROLS RENDER');
     const progressBarRef = useRef<HTMLInputElement>(null!);
     const animationRef = useRef<number | undefined>(undefined);
 
@@ -86,6 +85,7 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
       );
       dispatch(setCurrentTime(Number(progressBarRef.current.value)));
     };
+
     const changeRange = (): void => {
       audio.currentTime = Number(progressBarRef.current.value);
       changePlayerCurrentTime();
@@ -105,11 +105,9 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
     );
 
     const handlePlayClick = (): void => {
-      const prevValue = isPlaying;
-      setIsPlaying(!prevValue);
-      if (!prevValue) {
+      setIsPlaying(!isPlaying);
+      if (!isPlaying) {
         audio.play();
-        audio.volume = 0.3;
         animationRef.current = requestAnimationFrame(whilePlaying);
       } else {
         audio.pause();
@@ -118,10 +116,12 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
         }
       }
     };
+
     return (
       <div className={styles.player_controls}>
         <div className={styles.playback_block}>
           <FaRandom
+            className={styles.random_button}
             onClick={handleChangeTrackReordering}
             style={{ width: '13px', height: '13px', cursor: 'pointer' }}
           />

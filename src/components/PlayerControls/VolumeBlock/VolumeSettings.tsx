@@ -2,7 +2,7 @@ import { ChangeEvent, FC, memo, useState } from 'react';
 
 import { FaVolumeDown, FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
 
-import styles from 'components/PlayerControls/PlayerControls.module.css';
+import styles from 'components/PlayerControls/VolumeBlock/VolumeSettings.module.css';
 
 type VolumeSettingsPropsType = {
   handleChangeVolumeRange: (value: number) => void;
@@ -11,7 +11,6 @@ export const VolumeSettings: FC<VolumeSettingsPropsType> = memo(
   ({ handleChangeVolumeRange }) => {
     const [volumeValue, setVolumeValue] = useState<number>(0.3);
     const [isMuted, setIsMuted] = useState<boolean>(false);
-    console.log('Volume RENDER');
 
     const changeVolume = (e: ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.currentTarget;
@@ -34,7 +33,7 @@ export const VolumeSettings: FC<VolumeSettingsPropsType> = memo(
         </button>
         <input
           type="range"
-          className={styles.progressBar}
+          className={styles.volume_progressBar}
           min="0"
           max="1"
           step="0.001"

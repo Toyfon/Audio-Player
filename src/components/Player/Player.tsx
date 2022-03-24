@@ -1,23 +1,29 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
+import { AiOutlineMenu } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { changeTracksOrder, setRepeatValue } from 'bll/player-slice';
-import { selectIsRepeat } from 'bll/selectors/player-selectors';
-import { RootStateType } from 'bll/store';
+import { selectIsRepeat, selectSongs } from 'bll/selectors/player-selectors';
 import styles from 'components/Player/player.module.css';
 import { PlayerControls } from 'components/PlayerControls/PlayerControls';
 import { PlayerDetails } from 'components/PlayerDetails/PlayerDetails';
+import { PlayList } from 'components/Playlist/PlayList';
 
 export const Player: FC = () => {
-  const songs = useSelector<RootStateType, any>(state => state.player.songs);
+  const songs = useSelector(selectSongs);
   const isRepeat = useSelector(selectIsRepeat);
   const dispatch = useDispatch();
 
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
   const [nextSongIndex, setNextSongIndex] = useState<number>(currentSongIndex + 1);
+  const [isShowPlaylist, setIsShowPlaylist] = useState(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
+
+  const audio = audioEl.current;
+
   useEffect(() => {
     setNextSongIndex(() => {
       if (currentSongIndex + 1 > songs.length - 1) {
@@ -35,6 +41,7 @@ export const Player: FC = () => {
         if (temp > songs.length - 1) {
           temp = 0;
         }
+        audio.autoplay = true;
         return temp;
       });
     } else {
@@ -44,10 +51,12 @@ export const Player: FC = () => {
         if (temp < 0) {
           temp = songs.length - 1;
         }
+        audio.autoplay = true;
         return temp;
       });
     }
   };
+
   const handleChangeRepeatValue = useCallback(
     (value: boolean): void => {
       dispatch(setRepeatValue(value));
@@ -59,19 +68,36 @@ export const Player: FC = () => {
     dispatch(changeTracksOrder());
   }, [dispatch]);
 
+  const handleShowPlaylistOnClick = (): void => {
+    setIsShowPlaylist(!isShowPlaylist);
+  };
+
+  const callback = (songIndex: number): void => {
+    setCurrentSongIndex(songIndex);
+    audio.autoplay = true;
+    setIsPlaying(true);
+  };
+
   return (
     <div className={styles.player}>
       <audio loop={isRepeat} ref={audioEl} src={songs[currentSongIndex].src}>
         <track kind="captions" />
       </audio>
       <h4>Playing now</h4>
+      {isShowPlaylist && <PlayList callback={callback} />}
       <PlayerDetails song={songs[currentSongIndex]} />
       <PlayerControls
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
         skipSong={skipSong}
         audioEl={audioEl}
         currentSongIndex={currentSongIndex}
         handleChangeRepeatValue={handleChangeRepeatValue}
         handleChangeTrackReordering={handleChangeTrackReordering}
+      />
+      <AiOutlineMenu
+        style={{ cursor: 'pointer', color: '#AAA' }}
+        onClick={handleShowPlaylistOnClick}
       />
       <p>
         <strong>Next up:</strong> {songs[nextSongIndex].title} by{' '}
