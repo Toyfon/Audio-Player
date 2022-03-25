@@ -45,6 +45,13 @@ const songs: SongType[] = [
     img_src: './images/ellie.jpg',
     src: './music/Ellie.mp3',
   },
+  {
+    id: 7,
+    title: 'All the stars',
+    artist: 'Kendrick Lamar & SZA',
+    img_src: './images/kendrick_sza.png',
+    src: './music/Kendrick_SZA.mp3',
+  },
 ];
 
 const playerSlice = createSlice({

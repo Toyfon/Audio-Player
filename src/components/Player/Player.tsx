@@ -21,7 +21,6 @@ export const Player: FC = () => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
-
   const audio = audioEl.current;
 
   useEffect(() => {
@@ -68,15 +67,18 @@ export const Player: FC = () => {
     dispatch(changeTracksOrder());
   }, [dispatch]);
 
-  const handleShowPlaylistOnClick = (): void => {
+  const handleShowPlaylistOnClick = useCallback((): void => {
     setIsShowPlaylist(!isShowPlaylist);
-  };
+  }, [isShowPlaylist]);
 
-  const callback = (songIndex: number): void => {
-    setCurrentSongIndex(songIndex);
-    audio.autoplay = true;
-    setIsPlaying(true);
-  };
+  const callback = useCallback(
+    (songIndex: number): void => {
+      setCurrentSongIndex(songIndex);
+      audio.autoplay = true;
+      setIsPlaying(true);
+    },
+    [audio],
+  );
 
   return (
     <div className={styles.player}>
