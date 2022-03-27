@@ -88,7 +88,7 @@ export const Player: FC = () => {
         <track kind="captions" />
       </audio>
       {isShowPlaylist && <PlayList callback={callback} />}
-      <h4>Playing now!!!!!!!</h4>
+      <h4>Playing now</h4>
       <PlayerDetails song={songs[currentSongIndex]} />
       <PlayerControls
         isPlaying={isPlaying}
