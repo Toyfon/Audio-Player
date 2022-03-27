@@ -21,6 +21,7 @@ export const Player: FC = () => {
 
   const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
   const audio = audioEl.current;
+  console.log(audio);
 
   const dispatch = useDispatch();
 
