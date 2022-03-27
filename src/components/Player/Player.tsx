@@ -1,10 +1,10 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { AiOutlineMenu } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { changeTracksOrder, setRepeatValue } from 'bll/player-slice';
+import { setRepeatValue } from 'bll/player-slice';
 import { selectIsRepeat, selectSongs } from 'bll/selectors/player-selectors';
+import { MenuButton } from 'components/MenuButton/MenuButton';
 import styles from 'components/Player/player.module.css';
 import { PlayerControls } from 'components/PlayerControls/PlayerControls';
 import { PlayerDetails } from 'components/PlayerDetails/PlayerDetails';
@@ -21,7 +21,6 @@ export const Player: FC = () => {
 
   const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
   const audio = audioEl.current;
-  console.log(audio);
 
   const dispatch = useDispatch();
 
@@ -65,14 +64,6 @@ export const Player: FC = () => {
     [dispatch],
   );
 
-  const handleChangeTrackReordering = useCallback((): void => {
-    dispatch(changeTracksOrder());
-  }, [dispatch]);
-
-  const handleShowPlaylistOnClick = useCallback((): void => {
-    setIsShowPlaylist(!isShowPlaylist);
-  }, [isShowPlaylist]);
-
   const callback = useCallback(
     (songIndex: number): void => {
       setCurrentSongIndex(songIndex);
@@ -87,9 +78,9 @@ export const Player: FC = () => {
       <audio loop={isRepeat} ref={audioEl} src={songs[currentSongIndex].src}>
         <track kind="captions" />
       </audio>
-      {isShowPlaylist && <PlayList callback={callback} />}
       <h4>Playing now</h4>
       <PlayerDetails song={songs[currentSongIndex]} />
+      {isShowPlaylist && <PlayList callback={callback} />}
       <PlayerControls
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
@@ -97,12 +88,8 @@ export const Player: FC = () => {
         audioEl={audioEl}
         currentSongIndex={currentSongIndex}
         handleChangeRepeatValue={handleChangeRepeatValue}
-        handleChangeTrackReordering={handleChangeTrackReordering}
       />
-      <AiOutlineMenu
-        className={styles.open_playlist}
-        onClick={handleShowPlaylistOnClick}
-      />
+      <MenuButton isShowPlaylist={isShowPlaylist} setIsShowPlaylist={setIsShowPlaylist} />
       <p>
         <strong>Next up:</strong> {songs[nextSongIndex].title} by{' '}
         {songs[nextSongIndex].artist}

@@ -1,0 +1,20 @@
+.open_playlist {
+    cursor: pointer;
+    color: #AAA;
+}
+
+.open_playlist:hover {
+    transform: scale(1.2);
+}
+
+
+.active_open_playlist {
+    background-color: #d5d3d3;
+    color: #211f1f;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.active_open_playlist:hover {
+    transform: scale(1.2);
+}

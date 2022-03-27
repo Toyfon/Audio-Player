@@ -15,19 +15,6 @@
     margin-bottom: 10px;
 }
 
-.random_button {
-    width: 13px;
-    height: 13px;
-    margin-right: 5px;
-    cursor: pointer;
-    color:#AAA;
-}
-
-.random_button:hover {
-    color: #70c9c8;
-    transform: scale(1.2);
-}
-
 .buttons_group {
     display: flex;
     align-items: baseline;

@@ -1,0 +1,11 @@
+.playlist_container {
+    border: 1px solid #f2faf9;
+    margin-bottom: 20px;
+}
+
+.playlist_element {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color:  #f2faf9;
+}

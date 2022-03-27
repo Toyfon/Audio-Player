@@ -27,13 +27,3 @@
     color:#d5d3d3;
 }
 
-.open_playlist {
-    cursor: pointer;
-    color: #AAA;
-}
-
-.open_playlist:hover {
-    color: #70c9c8;
-    transform: scale(1.2);
-}
-

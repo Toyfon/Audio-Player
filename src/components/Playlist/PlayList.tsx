@@ -4,6 +4,7 @@ import { FaPlay } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { selectSongs } from 'bll/selectors/player-selectors';
+import styles from 'components/Playlist/playlist.module.css';
 
 type PlayListPropsType = {
   callback: (id: number) => void;
@@ -17,21 +18,19 @@ export const PlayList: FC<PlayListPropsType> = ({ callback }) => {
     callback(songIndex);
   }, []);
   return (
-    <div>
-      <ul>
-        {songs.map(song => (
-          <li key={song.id}>
-            <span>
-              <strong>{song.artist} </strong>
-            </span>
-            <span>{song.title} </span>
-            <FaPlay
-              onClick={() => playCurrentTrack(songs.indexOf(song))}
-              style={{ width: '10px', height: '10px' }}
-            />
-          </li>
-        ))}
-      </ul>
+    <div className={styles.playlist_container}>
+      {songs.map(song => (
+        <div key={song.id} className={styles.playlist_element}>
+          <span>
+            <strong>{song.artist} </strong>
+          </span>
+          <span>{song.title} </span>
+          <FaPlay
+            onClick={() => playCurrentTrack(songs.indexOf(song))}
+            style={{ width: '10px', height: '10px' }}
+          />
+        </div>
+      ))}
     </div>
   );
 };

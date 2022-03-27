@@ -1,6 +1,6 @@
 import { FC, memo, MutableRefObject, useCallback, useEffect, useRef } from 'react';
 
-import { FaPause, FaPlay, FaRandom } from 'react-icons/fa';
+import { FaPause, FaPlay } from 'react-icons/fa';
 import { IoPlayBack, IoPlayForward } from 'react-icons/io5';
 import { MdRepeat, MdRepeatOne } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import {
 } from 'bll/selectors/player-selectors';
 import styles from 'components/PlayerControls/PlayerControls.module.css';
 import { VolumeSettings } from 'components/PlayerControls/VolumeBlock/VolumeSettings';
+import { RandomButton } from 'components/RandomButton/RandomButton';
 import { calculateTime } from 'utils/calculateTimeUtil';
 
 type PlayerControlsType = {
@@ -20,20 +21,12 @@ type PlayerControlsType = {
   audioEl: MutableRefObject<HTMLAudioElement>;
   currentSongIndex: number;
   handleChangeRepeatValue: (value: boolean) => void;
-  handleChangeTrackReordering: () => void;
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
 };
 
 export const PlayerControls: FC<PlayerControlsType> = memo(
-  ({
-    skipSong,
-    audioEl,
-    handleChangeRepeatValue,
-    handleChangeTrackReordering,
-    isPlaying,
-    setIsPlaying,
-  }) => {
+  ({ skipSong, audioEl, handleChangeRepeatValue, isPlaying, setIsPlaying }) => {
     const currentTime = useSelector(selectCurrentTime);
     const duration = useSelector(selectDuration);
     const isRepeat = useSelector(selectIsRepeat);
@@ -120,11 +113,7 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
     return (
       <div className={styles.player_controls}>
         <div className={styles.playback_block}>
-          <FaRandom
-            className={styles.random_button}
-            onClick={handleChangeTrackReordering}
-            style={{ width: '13px', height: '13px', cursor: 'pointer' }}
-          />
+          <RandomButton />
           <input
             type="range"
             defaultValue="0"
