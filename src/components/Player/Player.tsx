@@ -13,7 +13,6 @@ import { PlayList } from 'components/Playlist/PlayList';
 export const Player: FC = () => {
   const songs = useSelector(selectSongs);
   const isRepeat = useSelector(selectIsRepeat);
-  const dispatch = useDispatch();
 
   const [currentSongIndex, setCurrentSongIndex] = useState<number>(0);
   const [nextSongIndex, setNextSongIndex] = useState<number>(currentSongIndex + 1);
@@ -22,6 +21,8 @@ export const Player: FC = () => {
 
   const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
   const audio = audioEl.current;
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setNextSongIndex(() => {
