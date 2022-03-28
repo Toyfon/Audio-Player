@@ -7,6 +7,7 @@ import { setMuteVolume } from 'bll/player-slice';
 import { selectIsMuted } from 'bll/selectors/player-selectors';
 import styles from 'components/PlayerControls/VolumeBlock/VolumeSettings.module.css';
 
+const MAX = 1;
 type VolumeSettingsPropsType = {
   handleChangeVolumeRange: (value: number) => void;
 };
@@ -33,6 +34,11 @@ export const VolumeSettings: FC<VolumeSettingsPropsType> = memo(
         handleChangeVolumeRange(volumeValue);
       }
     };
+
+    const getBackgroundSize = (): { backgroundSize: string } => ({
+      backgroundSize: `${(volumeValue * 100) / MAX}% 100%`,
+    });
+
     return (
       <div className={styles.volumeBlock}>
         <button className={styles.volumeButton} type="button" onClick={muteVolume}>
@@ -41,6 +47,7 @@ export const VolumeSettings: FC<VolumeSettingsPropsType> = memo(
         <input
           type="range"
           className={styles.volume_progressBar}
+          style={getBackgroundSize()}
           min="0"
           max="1"
           step="0.001"

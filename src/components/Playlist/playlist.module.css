@@ -8,4 +8,9 @@
     justify-content: space-between;
     align-items: center;
     color:  #f2faf9;
+    font-size: 12px;
+}
+
+.playlist_element span {
+    color: #70c9c8;
 }

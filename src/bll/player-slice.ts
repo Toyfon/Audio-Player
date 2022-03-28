@@ -58,8 +58,6 @@ const playerSlice = createSlice({
   name: 'player',
   initialState: {
     songs,
-    currentSongIndex: 0,
-    nextSongIndex: 0,
     currentTime: 0,
     duration: 0,
     isRepeat: false,

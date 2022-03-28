@@ -13,10 +13,12 @@ type PlayListPropsType = {
 export const PlayList: FC<PlayListPropsType> = ({ callback }) => {
   const songs = useSelector(selectSongs);
 
-  const playCurrentTrack = useCallback((songIndex: number): void => {
-    console.log(songIndex);
-    callback(songIndex);
-  }, []);
+  const playCurrentTrack = useCallback(
+    (songIndex: number): void => {
+      callback(songIndex);
+    },
+    [callback],
+  );
   return (
     <div className={styles.playlist_container}>
       {songs.map(song => (
@@ -24,7 +26,7 @@ export const PlayList: FC<PlayListPropsType> = ({ callback }) => {
           <span>
             <strong>{song.artist} </strong>
           </span>
-          <span>{song.title} </span>
+          <span style={{ color: 'grey' }}>{song.title} </span>
           <FaPlay
             onClick={() => playCurrentTrack(songs.indexOf(song))}
             style={{ width: '10px', height: '10px' }}
