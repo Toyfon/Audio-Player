@@ -8,3 +8,4 @@ export const selectCurrentTime = (state: RootStateType): number =>
   state.player.currentTime;
 export const selectDuration = (state: RootStateType): number => state.player.duration;
 export const selectIsRepeat = (state: RootStateType): boolean => state.player.isRepeat;
+export const selectIsMuted = (state: RootStateType): boolean => state.player.isMuted;

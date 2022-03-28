@@ -1,0 +1,15 @@
+.repeat_button {
+    width: 13px;
+    height: 13px;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin-left: 5px;
+    background-color: inherit;
+    cursor: pointer;
+    color: #AAA;
+}
+
+.repeat_button:hover {
+    transform: scale(1.2);
+}

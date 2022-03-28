@@ -1,7 +1,10 @@
 import { ChangeEvent, FC, memo, useState } from 'react';
 
 import { FaVolumeDown, FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { setMuteVolume } from 'bll/player-slice';
+import { selectIsMuted } from 'bll/selectors/player-selectors';
 import styles from 'components/PlayerControls/VolumeBlock/VolumeSettings.module.css';
 
 type VolumeSettingsPropsType = {
@@ -10,16 +13,20 @@ type VolumeSettingsPropsType = {
 export const VolumeSettings: FC<VolumeSettingsPropsType> = memo(
   ({ handleChangeVolumeRange }) => {
     const [volumeValue, setVolumeValue] = useState<number>(0.3);
-    const [isMuted, setIsMuted] = useState<boolean>(false);
+
+    const isMuted = useSelector(selectIsMuted);
+
+    const dispatch = useDispatch();
 
     const changeVolume = (e: ChangeEvent<HTMLInputElement>): void => {
       const { value } = e.currentTarget;
       setVolumeValue(+value);
       handleChangeVolumeRange(Number(value));
+      dispatch(setMuteVolume(false));
     };
 
     const muteVolume = (): void => {
-      setIsMuted(!isMuted);
+      dispatch(setMuteVolume(!isMuted));
       if (!isMuted) {
         handleChangeVolumeRange(0);
       } else {

@@ -1,8 +1,7 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { setRepeatValue } from 'bll/player-slice';
 import { selectIsRepeat, selectSongs } from 'bll/selectors/player-selectors';
 import { MenuButton } from 'components/MenuButton/MenuButton';
 import styles from 'components/Player/player.module.css';
@@ -21,8 +20,6 @@ export const Player: FC = () => {
 
   const audioEl = useRef<HTMLAudioElement>(new Audio(songs[currentSongIndex].src));
   const audio = audioEl.current;
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setNextSongIndex(() => {
@@ -57,13 +54,6 @@ export const Player: FC = () => {
     }
   };
 
-  const handleChangeRepeatValue = useCallback(
-    (value: boolean): void => {
-      dispatch(setRepeatValue(value));
-    },
-    [dispatch],
-  );
-
   const callback = useCallback(
     (songIndex: number): void => {
       setCurrentSongIndex(songIndex);
@@ -87,7 +77,6 @@ export const Player: FC = () => {
         skipSong={skipSong}
         audioEl={audioEl}
         currentSongIndex={currentSongIndex}
-        handleChangeRepeatValue={handleChangeRepeatValue}
       />
       <MenuButton isShowPlaylist={isShowPlaylist} setIsShowPlaylist={setIsShowPlaylist} />
       <p>

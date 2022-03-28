@@ -63,6 +63,7 @@ const playerSlice = createSlice({
     currentTime: 0,
     duration: 0,
     isRepeat: false,
+    isMuted: false,
   },
   reducers: {
     setCurrentTime: (state, action: PayloadAction<number>) => {
@@ -77,9 +78,17 @@ const playerSlice = createSlice({
     changeTracksOrder: state => {
       state.songs = state.songs.sort(() => Math.random() - 0.5);
     },
+    setMuteVolume: (state, action: PayloadAction<boolean>) => {
+      state.isMuted = action.payload;
+    },
   },
 });
 
-export const { setCurrentTime, setDuration, setRepeatValue, changeTracksOrder } =
-  playerSlice.actions;
+export const {
+  setCurrentTime,
+  setDuration,
+  setRepeatValue,
+  changeTracksOrder,
+  setMuteVolume,
+} = playerSlice.actions;
 export default playerSlice.reducer;

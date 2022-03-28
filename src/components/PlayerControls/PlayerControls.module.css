@@ -21,21 +21,6 @@
     margin-bottom: 10px;
 }
 
-.repeat_button {
-    border: none;
-    outline: none;
-    padding: 0;
-    margin-left: 5px;
-    background-color: inherit;
-    cursor: pointer;
-    color: #AAA;
-}
-
-.repeat_button:hover {
-    color: #70c9c8;
-    transform: scale(1.2);
-}
-
 .player_controls > input {
     width: 100%;
 }
