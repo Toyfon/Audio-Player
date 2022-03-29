@@ -42,7 +42,7 @@ export const VolumeSettings: FC<VolumeSettingsPropsType> = memo(
     return (
       <div className={styles.volumeBlock}>
         <button className={styles.volumeButton} type="button" onClick={muteVolume}>
-          {isMuted ? <FaVolumeMute /> : <FaVolumeDown />}
+          {isMuted || volumeValue === 0 ? <FaVolumeMute /> : <FaVolumeDown />}
         </button>
         <input
           type="range"
