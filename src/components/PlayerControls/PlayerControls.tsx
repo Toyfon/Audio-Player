@@ -54,7 +54,6 @@ export const PlayerControls: FC<PlayerControlsType> = memo(
               // Show paused UI.
             });
         }
-        console.log('следующий трек');
       };
       audio.addEventListener('ended', playNextSong);
       return () => {
